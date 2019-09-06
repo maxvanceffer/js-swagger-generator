@@ -1,0 +1,30 @@
+{
+  "name": "js-swagger-generator",
+  "version": "0.0.1",
+  "description": "Swagger api generator for js",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxvanceffer/js-swagger-generator.git"
+  },
+  "keywords": [
+    "swagger-api",
+    "swagger-generator",
+    "js-generator",
+    "swagger-codegen",
+    "swagger"
+  ],
+  "author": "Maxim Gnidac",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maxvanceffer/js-swagger-generator/issues"
+  },
+  "homepage": "https://github.com/maxvanceffer/js-swagger-generator#readme",
+  "dependencies": {
+    "js-yaml": "^3.13.1",
+    "twig": "^1.13.3"
+  }
+}
