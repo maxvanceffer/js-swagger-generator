@@ -4,12 +4,12 @@
 /*eslint-disable no-console*/
 
 // stdlib
-const fs = require('fs')
 const colors = require('colors')
 
 // 3rd-party
 const argparse = require('argparse')
 const Engine = require('../engine/Engine.js')
+const Logger = require('../engine/Logger')
 
 // help vars
 const outputPad = 2
@@ -46,23 +46,34 @@ cli.addArgument([ 'file' ], {
   defaultValue: '-'
 });
 
-////////////////////////////////////////////////////////////////////////////////
+cli.addArgument([ 'destination' ], {
+  help:   'Destination folder, where generated code will be saved',
+  nargs: '?',
+  defaultValue: '-'
+});
 
+////////////////////////////////////////////////////////////////////////////////
 
 var options = cli.parseArgs();
 
-console.log(options)
 ////////////////////////////////////////////////////////////////////////////////
 
 if (options.file === '-') {
-  console.error('Error: ')
-  console.error('Swagger/Open API file path is required'.padStart(outputPad, '___').red)
+  console.error('Error: '.red)
+  console.error(''.padStart(outputPad), 'Swagger/Open API file path is required')
   return process.exit(1)
 }
 
-console.info('Generating source code with parameters: '.blue)
+if (options.destination === '-') {
+  console.error('Error: '.red)
+  console.error(''.padStart(outputPad), 'Destination folder is required')
+  return process.exit(1)
+}
+
+console.info('Parameters: '.blue)
 const table = [
   [''.padStart(outputPad, ' '), 'Swagger file: '.yellow, options.file],
+  [''.padStart(outputPad, ' '), 'Destination:  '.yellow, options.destination],
   [''.padStart(outputPad, ' '), 'Language:     '.yellow, options.language],
   [''.padStart(outputPad, ' '), 'HTTP client:  '.yellow, options.client]
 ]
@@ -70,3 +81,18 @@ const table = [
 table.forEach(row => console.info(...row))
 
 const engine = new Engine(options)
+
+try {
+  Logger.setTrace(options.trace)
+  return engine
+    .generate()
+    .catch(e => {
+      console.error('Error:'.red)
+      console.error(''.padStart(outputPad), e)
+      return process.exit(1)
+    })
+} catch (e) {
+  console.error('Error:'.red)
+  console.error(''.padStart(outputPad), e)
+  return process.exit(1)
+}
