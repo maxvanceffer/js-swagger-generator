@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+'use strict';
+
+/*eslint-disable no-console*/
+
+// stdlib
+const fs = require('fs')
+const colors = require('colors')
+
+// 3rd-party
+const argparse = require('argparse')
+const Engine = require('../engine/Engine.js')
+
+// help vars
+const outputPad = 2
+
+/////
+const cli = new argparse.ArgumentParser({
+  prog: 'js-swagger',
+  version: require('../package.json').version,
+  addHelp: true
+})
+
+cli.addArgument([ '-c', '--client' ], {
+  help:   'Http client backend which will be used in generated code',
+  action: 'storeTrue',
+  choices: ['axios', 'fetch', 'superagent'],
+  defaultValue: 'axios'
+});
+
+cli.addArgument([ '-l', '--language' ], {
+  help:   'For each language will be generated code (ts - typescript, es - javascript es5 and above)',
+  defaultValue: 'es',
+  choices: ['es', 'ts'],
+  action: 'storeTrue'
+});
+
+cli.addArgument([ '-t', '--trace' ], {
+  help:   'Show stack trace on error',
+  action: 'storeTrue'
+});
+
+cli.addArgument([ 'file' ], {
+  help:   'Swagger/Open API version 3.0 file to read, utf-8 encoded without BOM',
+  nargs:  '?',
+  defaultValue: '-'
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+var options = cli.parseArgs();
+
+console.log(options)
+////////////////////////////////////////////////////////////////////////////////
+
+if (options.file === '-') {
+  console.error('Error: ')
+  console.error('Swagger/Open API file path is required'.padStart(outputPad, '___').red)
+  return process.exit(1)
+}
+
+console.info('Generating source code with parameters: '.blue)
+const table = [
+  [''.padStart(outputPad, ' '), 'Swagger file: '.yellow, options.file],
+  [''.padStart(outputPad, ' '), 'Language:     '.yellow, options.language],
+  [''.padStart(outputPad, ' '), 'HTTP client:  '.yellow, options.client]
+]
+
+table.forEach(row => console.info(...row))
+
+const engine = new Engine(options)

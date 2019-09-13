@@ -23,8 +23,16 @@
     "url": "https://github.com/maxvanceffer/js-swagger-generator/issues"
   },
   "homepage": "https://github.com/maxvanceffer/js-swagger-generator#readme",
+  "contributors": [
+    "Maxim Gnidac <maxvanceffer@gmail.com> (http://noction.com)"
+  ],
   "dependencies": {
+    "argparse": "^1.0.10",
+    "colors": "^1.3.3",
     "js-yaml": "^3.13.1",
     "twig": "^1.13.3"
+  },
+  "bin": {
+    "js-swagger": "bin/js-swagger"
   }
 }
