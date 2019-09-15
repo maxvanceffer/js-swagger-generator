@@ -8,7 +8,7 @@ import { getDomain, request } from './request'
 * @param {{ parameter.camelCaseName }} { {{ parameter.type }} } {{ parameter.description }}
  {% endfor %}
 */
-export const {{ methodName }} = function(parameters = {}) {
+export default function (parameters = {}) {
   const domain = parameters.$domain ? parameters.$domain : getDomain()
   const config = parameters.$config
   let path = '{{ path }}'
@@ -34,6 +34,12 @@ if(parameters['{{ param.camelCaseName }}'] !== undefined) {
 
   {% if param.in == 'path' %}
 path = path.replace('{{ param.name }}', `${parameters['{{param.camelCaseName}}']}`)
+  {% endif %}
+
+  {% if param.isForm == true %}
+if(parameters['{{param.camelCaseName}}'] !== undefined) {
+  form['{{param.name}}'] = parameters['{{param.camelCaseName}}']
+}
   {% endif %}
 {% endfor %}
 

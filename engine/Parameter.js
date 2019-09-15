@@ -40,6 +40,10 @@ class Parameter {
     return _.get(this.options, 'in', 'query')
   }
 
+  get isForm () {
+    return _.get(this.options, 'style', false) === 'form'
+  }
+
   get hasDefault () {
     return (this.defaultValue !== false)
   }
