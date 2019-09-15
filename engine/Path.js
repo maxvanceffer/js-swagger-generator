@@ -47,6 +47,10 @@ class Path extends BasePath {
     return this.getProperty('method', false)
   }
 
+  get importStatement () {
+    return `import ${this.operationId} from './${this.operationId}.js'`
+  }
+
   static extract (properties, method, path, json) {
     // check if we have any $refs convert them to real values
     const ref = _.get(properties, ['requestBody', 'content', 'application/json', 'schema', '$ref'])

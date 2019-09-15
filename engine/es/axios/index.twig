@@ -1,0 +1,13 @@
+{% spaceless %}
+{% for import in imports %}
+{{ import }}
+{% endfor %}
+{% endspaceless %}
+
+
+export {
+{% for method in methods %}
+  {{ method }}{% if loop.last == false %},{% endif %}
+
+{% endfor %}
+}

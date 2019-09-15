@@ -1,12 +1,14 @@
 'use strict'
 
 const yaml = require('js-yaml')
-const fs   = require('fs')
+const fs = require('fs')
+const path = require('path')
 const semver = require('semver')
 const log = require('./Logger')
 const _ = require('lodash')
 const twig = require('twig')
-const Path = require('./Path')
+const ApiPath = require('./Path')
+const { renderTemplateToFile } = require('./helpers')
 
 /**
  * Parse extract all information from swagger file
@@ -74,35 +76,44 @@ class Engine {
         .loadAndConvert()
         .then((json) => {
           this._json = json
-          const { language, client, destination, defaultServerAddress } = this
-          const baseTemplate = `${__dirname}/${language}/${client}/base.twig`
-          const options = {...this, defaultServerAddress }
 
+          this.renderIndexFile()
+          this.renderRequestFile()
 
           const paths = this._paths.map(path => path.renderToFile(this))
 
           return Promise.all(paths)
             .then((results) => {
-              twig.renderFile(baseTemplate, options, (error, html) => {
-                if (error) {
-                  reject(error)
-                }
-
-                fs.writeFile(`${destination}/request.js`, html, (error) => {
-                  if (error) {
-                    reject('')
-                  }
-
-                  console.info('Done !')
-                  resolve(true)
-                })
-              })
+              resolve(true)
             })
             .catch(e => {
               console.error(e)
+              reject(e)
             })
         })
     })
+  }
+
+  get imports () {
+    return this._paths.map(path => path.importStatement)
+  }
+
+  get methods () {
+    return this._paths.map(path => path.operationId)
+  }
+
+  renderIndexFile () {
+    const template = path.join(__dirname, this.language, this.client, 'index.twig')
+    const file = path.join(this.destination, 'index.js')
+
+    return renderTemplateToFile(template, file, this)
+  }
+
+  renderRequestFile () {
+    const template = path.join(__dirname, this.language, this.client, 'request.twig')
+    const file = path.join(this.destination, 'request.js')
+
+    return renderTemplateToFile(template, file, this)
   }
 
   loadAndConvert () {
@@ -146,7 +157,7 @@ class Engine {
       Object.keys(paths).forEach(path => {
         const methods = paths[path]
         Object.keys(methods).forEach(method1 => {
-          const object = Path.extract(methods[method1], method1, path, json)
+          const object = ApiPath.extract(methods[method1], method1, path, json)
           this._paths.push(object)
         })
       })
