@@ -82,17 +82,25 @@ table.forEach(row => console.info(...row))
 
 const engine = new Engine(options)
 
-try {
-  Logger.setTrace(options.trace)
-  return engine
-    .generate()
-    .catch(e => {
-      console.error('Error:'.red)
-      console.error(''.padStart(outputPad), e)
-      return process.exit(1)
-    })
-} catch (e) {
-  console.error('Error:'.red)
-  console.error(''.padStart(outputPad), e)
-  return process.exit(1)
+const render = async () => {
+  try {
+    Logger.setTrace(options.trace)
+    return await engine
+      .generate()
+      .then(() => {
+        console.info('Done !')
+        return process.exit(0)
+      })
+      .catch(e => {
+        console.error('Error:'.red)
+        console.error(''.padStart(outputPad), e)
+        return process.exit(1)
+      })
+  } catch (e) {
+    console.error('Error:'.red)
+    console.error(''.padStart(outputPad), e)
+    return process.exit(1)
+  }
 }
+
+render()

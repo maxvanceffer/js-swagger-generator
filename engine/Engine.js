@@ -1,3 +1,5 @@
+'use strict'
+
 const yaml = require('js-yaml')
 const fs   = require('fs')
 const semver = require('semver')
@@ -65,7 +67,7 @@ class Engine {
     return _.get(this._servers, [0, 'url'], '')
   }
 
-  generate () {
+  async generate () {
     log.info('Start generate')
     return new Promise((resolve, reject) => {
       return this
@@ -75,25 +77,32 @@ class Engine {
           const { language, client, destination, defaultServerAddress } = this
           const baseTemplate = `${__dirname}/${language}/${client}/base.twig`
           const options = {...this, defaultServerAddress }
-          twig.renderFile(baseTemplate, options, (error, html) => {
-            if (error) {
-              reject(error)
-            }
 
-            fs.writeFile(`${destination}/request.js`, html, (error) => {
-              if (error) {
-                reject('')
-              }
 
-              resolve(true)
+          const paths = this._paths.map(path => path.renderToFile(this))
+
+          return Promise.all(paths)
+            .then((results) => {
+              twig.renderFile(baseTemplate, options, (error, html) => {
+                if (error) {
+                  reject(error)
+                }
+
+                fs.writeFile(`${destination}/request.js`, html, (error) => {
+                  if (error) {
+                    reject('')
+                  }
+
+                  console.info('Done !')
+                  resolve(true)
+                })
+              })
             })
-          })
+            .catch(e => {
+              console.error(e)
+            })
         })
     })
-  }
-
-  renderBase () {
-
   }
 
   loadAndConvert () {

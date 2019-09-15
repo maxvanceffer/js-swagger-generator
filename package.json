@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "generate": "node bin/js-swagger sources/swagger.v3.yml tests"
+    "generate": "node bin/js-swagger ${PWD}/sources/swagger.v3.yml ${PWD}/tests"
   },
   "repository": {
     "type": "git",
