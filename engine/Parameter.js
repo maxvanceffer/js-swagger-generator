@@ -45,7 +45,7 @@ class Parameter {
   }
 
   get hasDefault () {
-    return (this.defaultValue !== false)
+    return (this.defaultValue !== undefined)
   }
 
   /**
@@ -55,9 +55,9 @@ class Parameter {
    * @returns {Boolean, String}
    */
   get defaultValue () {
-    const type = _.get(this.options, 'schema.type', false)
+    const type = _.get(this.options, 'schema.type', undefined)
 
-    if (type === false) {
+    if (type === undefined) {
       return type
     }
 
@@ -75,9 +75,11 @@ class Parameter {
       } else if (isParameterTypeNumber(itemType)) {
         return `[${itemDefault}]`
       }
+    } else if (isParameterTypeNumber(type)) {
+      return _.get(this.options, 'schema.items.default', 0)
     }
 
-    return false
+    return undefined
   }
 
   get optionsList () {

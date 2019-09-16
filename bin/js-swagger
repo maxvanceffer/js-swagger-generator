@@ -22,16 +22,16 @@ const cli = new argparse.ArgumentParser({
 })
 
 cli.addArgument([ '-c', '--client' ], {
-  help:   'Http client backend which will be used in generated code',
+  help:   'Http client backend which will be used in generated code, (axios, fetch, superagent)',
   action: 'storeTrue',
   choices: ['axios', 'fetch', 'superagent'],
   defaultValue: 'axios'
 });
 
 cli.addArgument([ '-l', '--language' ], {
-  help:   'For each language will be generated code (ts - typescript, es - javascript es5 and above)',
+  help:   'For each language will be generated code (ts - typescript, es - javascript es5 and above, js - for poor js)',
   defaultValue: 'es',
-  choices: ['es', 'ts'],
+  choices: ['es', 'ts', 'js'],
   action: 'storeTrue'
 });
 

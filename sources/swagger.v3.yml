@@ -107,6 +107,14 @@ paths:
             - available
             - pending
             - sold
+      - name: page-size
+        in: query
+        description: Page size
+        schema:
+          maximum: 5000
+          type: integer
+          format: uint16
+          default: 100
       responses:
         200:
           description: successful operation
