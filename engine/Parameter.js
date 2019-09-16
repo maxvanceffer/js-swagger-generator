@@ -76,7 +76,7 @@ class Parameter {
         return `[${itemDefault}]`
       }
     } else if (isParameterTypeNumber(type)) {
-      return _.get(this.options, 'schema.items.default', 0)
+      return _.get(this.options, 'schema.default', 0)
     }
 
     return undefined

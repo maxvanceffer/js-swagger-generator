@@ -8,4 +8,5 @@
 out
 gen
 tests/*.js
+tests/*.html
 node_modules
