@@ -56,6 +56,17 @@ export const setResponseResolver = (fn) => {
 }
 
 /**
+ *  Helper function for methods
+ */
+export const applyQueryParameters = (query, parameters) => {
+  if(parameters) {
+    Object.keys(parameters).forEach(function(parameterName){
+      query[parameterName] = parameters[parameterName]
+    });
+  }
+}
+
+/**
  *  Make final request, with provided arguments, this function mostly for internal use.
  */
 export const request = (method, url, body, queryParameters, form, config) => {

@@ -1,4 +1,4 @@
-import { getDomain, request } from './request'
+import { getDomain, request, applyQueryParameters } from './request'
 
 /**
  * {{summary}}
@@ -15,15 +15,16 @@ export default function (parameters = {}) {
   let body
   let queryParameters = {}
   let form = {}
-
+{{ '' }}
+{{ '' }}
 {% for param in parameters %}
-  {% if param.isRequired == true and param.hasDefault == false %}
-if(parameters['{{ param.camelCaseName }}'] === undefined) {
-  return Promise.reject(new Error('Missing required {{ param.type }} parameter: {{ param.camelCaseName }}'))
-}
+  {%- if param.isRequired == true and param.hasDefault == false %}
+  if(parameters['{{ param.camelCaseName }}'] === undefined) {
+    return Promise.reject(new Error('Missing required {{ param.type }} parameter: {{ param.camelCaseName }}'))
+  }
   {% endif %}
 
-  {% if param.in == 'query' %}
+  {%- if param.in == 'query' %}
 if(parameters['{{ param.camelCaseName }}'] !== undefined) {
     queryParameters['{{ param.name }}'] = parameters['{{ param.camelCaseName }}']
   } {% if param.hasDefault == true %} else if (parameters['{{ param.camelCaseName }}'] === undefined) {
@@ -33,21 +34,17 @@ if(parameters['{{ param.camelCaseName }}'] !== undefined) {
   {% endif %}
 
   {%- if param.in == 'path' %}
-    path = path.replace('{{ param.name }}', `${parameters['{{param.camelCaseName}}']}`)
+path = path.replace('{{'{'}}{{- param.name }}{{ '}' }}', `${parameters['{{- param.camelCaseName }}']}`)
   {% endif %}
 
-  {% if param.isForm == true %}
+  {%- if param.isForm == true %}
 if(parameters['{{param.camelCaseName}}'] !== undefined) {
   form['{{param.name}}'] = parameters['{{param.camelCaseName}}']
 }
   {% endif %}
 {% endfor %}
 
-  if(parameters.$queryParameters) {
-    Object.keys(parameters.$queryParameters).forEach(function(parameterName){
-      queryParameters[parameterName] = parameters.$queryParameters[parameterName]
-    });
-  }
+  applyQueryParameters(queryParameters, parameters.$queryParameters)
 
   return request('{{ method }}', domain + path, body, queryParameters, form, config)
 }
