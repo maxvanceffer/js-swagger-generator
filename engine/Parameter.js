@@ -65,9 +65,9 @@ class Parameter {
       return _.get(this.options, 'schema.type.default', false)
     } else if (type === 'array') {
       const itemType = _.get(this.options, 'schema.items.type', false)
-      const itemDefault = _.get(this.options, 'schema.items.default', false)
-      if (itemType === false || itemDefault === false) {
-        return itemType
+      const itemDefault = _.get(this.options, 'schema.items.default', undefined)
+      if (itemType === false || itemDefault === undefined) {
+        return undefined
       }
 
       if (isParameterTypeString(itemType)) {
