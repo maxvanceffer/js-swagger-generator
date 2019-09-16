@@ -32,8 +32,8 @@ if(parameters['{{ param.camelCaseName }}'] !== undefined) {
     {% endif %}
   {% endif %}
 
-  {% if param.in == 'path' %}
-path = path.replace('{{ param.name }}', `${parameters['{{param.camelCaseName}}']}`)
+  {%- if param.in == 'path' %}
+    path = path.replace('{{ param.name }}', `${parameters['{{param.camelCaseName}}']}`)
   {% endif %}
 
   {% if param.isForm == true %}

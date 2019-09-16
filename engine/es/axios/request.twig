@@ -78,15 +78,14 @@ export const request = (method, url, body, queryParameters, form, config) => {
   const configResolver = (config && config.resolver)
   if (typeof resolver === 'function' || typeof configResolver === 'function') {
     return new Promise((resolve, reject) => {
-        return request
-          .then(response => {
-            (resolver||configResolver)(response, resolve, reject)
-          })
-          .catch(error => {
-            reject(error)
-          })
-      })
-    }
+      return request
+        .then(response => {
+          (resolver||configResolver)(response, resolve, reject)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
   }
   return request
 }
