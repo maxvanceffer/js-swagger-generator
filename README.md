@@ -8,7 +8,7 @@ Using npm:
 ```bash
 $ npm install js-swagger-generator --save-dev
 ```
-######*Saving as dev dependency, because generator usually needed for development* 
+*Saving as dev dependency, because generator usually needed for development* 
 
 ## Generator API
 
