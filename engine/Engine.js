@@ -6,7 +6,6 @@ const path = require('path')
 const semver = require('semver')
 const log = require('./Logger')
 const _ = require('lodash')
-const twig = require('twig')
 const ApiPath = require('./Path')
 const { renderTemplateToFile } = require('./helpers')
 
