@@ -1,6 +1,6 @@
 {
   "name": "js-swagger-generator",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "Swagger api generator for js",
   "main": "index.js",
   "scripts": {
