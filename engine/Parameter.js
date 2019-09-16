@@ -83,9 +83,8 @@ class Parameter {
   }
 
   get optionsList () {
-    const options = _.omit(this.options, 'schema')
-    return Object.keys(options).map(key => {
-      return { key, json: JSON.stringify(options[key]) }
+    return Object.keys(this.options).map(key => {
+      return { key, json: JSON.stringify(this.options[key]) }
     })
   }
 }

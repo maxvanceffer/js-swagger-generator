@@ -2,7 +2,8 @@ export default {
 {% for param in parameters %}
   {{ param.camelCaseName }}: {
     {% for option in param.optionsList %}
-  "{{ option.key }}": {{ option.json }}{% if loop.last == false %},{% endif %}
+  "{{ option.key }}": {{ option.json }},
+  "camelCaseName": "{{ param.camelCaseName }}"
     {% endfor %}
   }{% if loop.last == false %},{% endif %}
 {% endfor %}
