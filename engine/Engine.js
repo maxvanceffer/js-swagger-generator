@@ -16,12 +16,13 @@ const { renderTemplateToFile } = require('./helpers')
 class Engine {
   /**
    *
-   * @param file        {String}  File path in local file system
-   * @param language    {String}  For which language to generate (es, ts)
-   * @param client      {String}  Which http client backend will be used (axios, fetch, superagent)
-   * @param destination {String}  Destination folder, where will be put generated source code
+   * @param file           {String}  File path in local file system
+   * @param language       {String}  For which language to generate (es, ts)
+   * @param client         {String}  Which http client backend will be used (axios, fetch, superagent)
+   * @param destination    {String}  Destination folder, where will be put generated source code
+   * @param parameters     {Boolean} Render parameters definition for each path ({operationId}_PARAMETERS.js)
    */
-  constructor ({ file, language = 'es', client = 'axios', destination = false }) {
+  constructor ({ file, language = 'es', client = 'axios', destination = '', parameters = false }) {
     this._file = file
     this._language = language
     this._client = client
@@ -30,6 +31,7 @@ class Engine {
     this._info = null
     this._servers = null
     this._paths = null
+    this._withParameters = parameters
     this._supported = '^3.*.*'
   }
 
@@ -63,6 +65,14 @@ class Engine {
 
   set destination (value) {
     this._destination = value
+  }
+
+  get withParameters () {
+    return this._withParameters
+  }
+
+  set withParameters (value) {
+    this._withParameters = value
   }
 
   get defaultServerAddress () {

@@ -75,11 +75,23 @@ class Path extends BasePath {
    * @return Promise
    */
   async renderToFile (engine) {
+    const file = this.renderMethod(engine)
+    if (engine.withParameters) {
+      this.renderParameters(engine)
+    }
+    return file
+  }
+
+  renderParameters (engine) {
+    const template = path.join(__dirname,engine.language, engine.client, 'parameters.twig')
+    const file = path.join(engine.destination, `${this.operationId}_PARAMETERS.js`)
+    return renderTemplateToFile(template, file, this)
+  }
+
+  renderMethod (engine) {
     const template = path.join(__dirname,engine.language, engine.client, 'method.twig')
     const file = path.join(engine.destination, `${this.operationId}.js`)
-
-    const options = { ...this.options, parameters: this.parameters }
-    return await renderTemplateToFile(template, file, this)
+    return renderTemplateToFile(template, file, this)
   }
 }
 

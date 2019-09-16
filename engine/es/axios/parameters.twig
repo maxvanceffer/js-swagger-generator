@@ -1,0 +1,9 @@
+export const {{ methodName }}_PARAMETERS = {
+{% for param in parameters %}
+  {{ param.camelCaseName }}: {
+    {% for option in param.optionsList %}
+  "{{ option.key }}": {{ option.json }}{% if loop.last == false %},{% endif %}
+    {% endfor %}
+  }{% if loop.last == false %},{% endif %}
+{% endfor %}
+}

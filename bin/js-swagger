@@ -35,6 +35,12 @@ cli.addArgument([ '-l', '--language' ], {
   action: 'storeTrue'
 });
 
+cli.addArgument([ '-p', '--parameters' ], {
+  help:   'Render parameters definition for each method, to use it separately',
+  defaultValue: true,
+  action: 'storeTrue'
+});
+
 cli.addArgument([ '-t', '--trace' ], {
   help:   'Show stack trace on error',
   action: 'storeTrue'
