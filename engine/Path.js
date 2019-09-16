@@ -51,6 +51,24 @@ class Path extends BasePath {
     return `import ${this.operationId} from './${this.operationId}.js'`
   }
 
+  get hasRequestBody () {
+    return (this.getProperty('requestBody', false) !== false)
+  }
+
+  get bodyPayloadType () {
+    if (this.hasRequestBody === true) {
+      const requestBody = this.getProperty('requestBody')
+      if (requestBody.content) {
+        const first = _.first(Object.keys(requestBody.content))
+        if (first !== '*/*') {
+          return first
+        }
+      }
+      return false
+    }
+    return false
+  }
+
   static extract (properties, method, path, json) {
     // check if we have any $refs convert them to real values
     const ref = _.get(properties, ['requestBody', 'content', 'application/json', 'schema', '$ref'])
