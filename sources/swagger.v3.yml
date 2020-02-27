@@ -37,6 +37,8 @@ paths:
       - pet
       summary: Update an existing pet
       operationId: updatePet
+      parameters:
+        - $ref: '#/components/parameters/test'
       requestBody:
         description: Pet object that needs to be added to the store
         content:
@@ -85,6 +87,35 @@ paths:
         - write:pets
         - read:pets
   /pet/findByStatus:
+    post:
+      tags: ['IRP']
+      summary: 'GMI middleware to IRP - POST'
+      description: ''
+      operationId: 'irp_post'
+      produces: ['application/json']
+      consumes: ['application/json']
+      parameters:
+        - name: section
+          in: path
+          type: string
+          required: true
+        - name: 'X-IRP-HOSTS'
+          in: 'header'
+          type: array
+          items:
+            type: string
+        - name: hosts
+          in: 'header'
+          type: array
+          items:
+            type: string
+        - in: body
+          name: body
+          schema:
+            type: object
+      responses:
+        200:
+          description: ""
     get:
       tags:
       - pet
@@ -600,6 +631,12 @@ paths:
           description: User not found
           content: {}
 components:
+  parameters:
+    test:
+      in: header
+      name: testHeader
+      schema:
+        type: string
   schemas:
     Order:
       type: object

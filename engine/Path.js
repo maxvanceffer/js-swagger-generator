@@ -36,7 +36,7 @@ class Path extends BasePath {
   }
 
   get parameters () {
-    return this.getProperty('parameters', []).map(options => new Parameter(options))
+    return this.getProperty('parameters', []).map(options => new Parameter(options, this.options.json))
   }
 
   get methodName () {
@@ -80,7 +80,7 @@ class Path extends BasePath {
       }
       _.set(properties, ['requestBody', 'content', 'application/json', 'schema'], schema)
 
-      return new Path({ ...properties, method, path })
+      return new Path({ ...properties, method, path, json })
     }
 
     return new Path({ ...properties, method, path })

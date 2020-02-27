@@ -5,8 +5,19 @@ const { isParameterTypeString, isParameterTypeNumber } = require('./helpers')
  * Parameter class, help render parameters with some additional functionality
  */
 class Parameter {
-  constructor (options) {
+  constructor (options, json) {
     this.options = options
+
+    const ref = _.get(options, '$ref', undefined)
+    if (ref !== undefined) {
+      this.options = _.get(json, ref.replace('#', '').replace('/', '').replace(/\//gmi, '.'), options)
+    }
+
+    const schemaRef = _.get(options, 'schema.$ref', undefined)
+    if (schemaRef !== undefined) {
+      const schema = _.get(json, schemaRef.replace('#', '').replace('/', '').replace(/\//gmi, '.'), options)
+      this.options = { ...options, ...{ schema }}
+    }
   }
 
   get camelCaseName () {
