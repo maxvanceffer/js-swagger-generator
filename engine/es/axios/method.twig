@@ -24,6 +24,10 @@ export default function (parameters = {}) {
   }
   {% endif %}
 
+  {%- if param.in == 'header' %}
+config.headers[`x-{{ param.name }}`] = parameters['{{- param.camelCaseName }}']
+  {% endif %}
+
   {%- if param.in == 'query' %}
 if(parameters['{{ param.camelCaseName }}'] !== undefined) {
     queryParameters['{{ param.name }}'] = parameters['{{ param.camelCaseName }}']
@@ -35,10 +39,6 @@ if(parameters['{{ param.camelCaseName }}'] !== undefined) {
 
   {%- if param.in == 'path' %}
 path = path.replace('{{'{'}}{{- param.name }}{{ '}' }}', `${parameters['{{- param.camelCaseName }}']}`)
-  {% endif %}
-
-  {%- if param.in == 'header' %}
-config.headers[`x-${param.name}`] = parameters['{{- param.camelCaseName }}']
   {% endif %}
 
   {%- if param.isForm == true %}

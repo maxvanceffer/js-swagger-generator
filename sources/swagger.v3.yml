@@ -92,6 +92,11 @@ paths:
       description: Multiple status values can be provided with comma separated strings
       operationId: findPetsByStatus
       parameters:
+      - name: petTag
+        in: header
+        required: true
+        schema:
+          type: string
       - name: status
         in: query
         description: Status values that need to be considered for filter
