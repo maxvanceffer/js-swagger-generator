@@ -89,6 +89,10 @@ class Engine {
           this.renderIndexFile()
           this.renderRequestFile()
 
+          if (!Array.isArray(this._paths)) {
+            return Promise.reject(new Error('Missing paths in documentation'))
+          }
+
           const paths = this._paths.map(path => path.renderToFile(this))
 
           return Promise.all(paths)
@@ -104,10 +108,18 @@ class Engine {
   }
 
   get imports () {
+    if (!Array.isArray(this._paths)) {
+      console.error('Missing paths in documentation')
+      return []
+    }
     return this._paths.map(path => path.importStatement)
   }
 
   get methods () {
+    if (!Array.isArray(this._paths)) {
+      console.error('Missing paths in documentation')
+      return []
+    }
     return this._paths.map(path => path.operationId)
   }
 

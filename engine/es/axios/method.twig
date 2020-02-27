@@ -4,7 +4,7 @@ import { getDomain, request, applyQueryParameters } from './request'
  * {{summary}}
  * request: {{ operationId }}
  * url: {{ path }}
- {% for parameter in parameters %}
+ {% for parameter in parameters|default([]) %}
 * @param {{ parameter.camelCaseName }} { {{ parameter.type }} } {{ parameter.description }}
  {% endfor %}
 */
@@ -17,7 +17,7 @@ export default function (parameters = {}) {
   let form = {}
 {{ '' }}
 {{ '' }}
-{% for param in parameters %}
+{% for param in parameters|default([]) %}
   {%- if param.isRequired == true and param.hasDefault == false %}
   if(parameters['{{ param.camelCaseName }}'] === undefined) {
     return Promise.reject(new Error('Missing required {{ param.type }} parameter: {{ param.camelCaseName }}'))
@@ -35,6 +35,10 @@ if(parameters['{{ param.camelCaseName }}'] !== undefined) {
 
   {%- if param.in == 'path' %}
 path = path.replace('{{'{'}}{{- param.name }}{{ '}' }}', `${parameters['{{- param.camelCaseName }}']}`)
+  {% endif %}
+
+  {%- if param.in == 'header' %}
+config.headers[`x-${param.name}`] = parameters['{{- param.camelCaseName }}']
   {% endif %}
 
   {%- if param.isForm == true %}

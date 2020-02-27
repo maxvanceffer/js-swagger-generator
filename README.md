@@ -18,3 +18,6 @@ Engine used to generate source from open api/swagger specification.
  
 Options:
 
+    --language: es [js, es, ts, c++]
+    --client: [fetch, axios, superagent] Only required for javascript and typescript
+

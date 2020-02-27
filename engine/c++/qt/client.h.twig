@@ -1,0 +1,52 @@
+#ifndef API_H
+#define API_H
+
+#include <QObject>
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
+
+class Api: public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QNetworkAccessManager * network READ network WRITE setNetwork NOTIFY networkChanged)
+    Q_PROPERTY(QString domain READ domain WRITE setDomain NOTIFY domainChanged)
+    Q_PROPERTY(QStringList availableDomains READ availableDomains WRITE setAvailableDomains NOTIFY availableDomainsChanged)
+  public:
+    explicit Api(QObject *parent = nullptr);
+    ~Api();
+
+    QNetworkAccessManager * network ();
+
+    /**
+     *  Current domain for making request
+     */
+    QString domain () const;
+
+    QStringList availableDomains () const;
+
+    /**
+     * Make free form request to api
+     */
+    QNetworkReply * request (
+      QNetworkAccessManager::Operation method,
+      QUrl url,
+      QVariantMap queryParameters,
+      QVariantMap body,
+      QVariantMap configuration
+    );
+
+  signals:
+    void requestReady (QNetworkReply * reply);
+    void requestFailed (QNetworkReply * reply);
+
+  public slots:
+    void setAvailableDomains (QStringList domains);
+    void setDomain (QString domain);
+    void setNetwork (QNetworkAccessManager * network);
+
+
+  private:
+    QNetworkAccessManager * m_network;
+    QString m_domain;
+    QStringList m_availableDomains;
+}
