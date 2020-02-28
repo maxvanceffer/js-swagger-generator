@@ -39,6 +39,10 @@ paths:
       operationId: updatePet
       parameters:
         - $ref: '#/components/parameters/test'
+        - name: testOther
+          in: query
+          schema:
+            type: string
       requestBody:
         description: Pet object that needs to be added to the store
         content:

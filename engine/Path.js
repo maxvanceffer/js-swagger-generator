@@ -83,7 +83,7 @@ class Path extends BasePath {
       return new Path({ ...properties, method, path, json })
     }
 
-    return new Path({ ...properties, method, path })
+    return new Path({ ...properties, method, path, json })
   }
 
   /**
