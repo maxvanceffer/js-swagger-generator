@@ -47,8 +47,19 @@ class Path extends BasePath {
     return this.getProperty('method', false)
   }
 
+  get fullImportStatement () {
+    return [
+      this.importStatement,
+      this.importParametersStatement
+    ]
+  }
+
   get importStatement () {
     return `import ${this.operationId} from './${this.operationId}.js'`
+  }
+
+  get importParametersStatement () {
+    return `import ${this.operationId}_PARAMETERS from './${this.operationId}_PARAMETERS.js'`
   }
 
   get hasRequestBody () {

@@ -1,13 +1,14 @@
-{% spaceless %}
 {% for import in imports %}
-{{ import }}
+  {{- import }}
 {% endfor %}
-{% endspaceless %}
 
-
+{{ '' }}
 export {
-{% for method in methods %}
-  {{ method }}{% if loop.last == false %},{% endif %}
+{%- for method in methods %}
 
+  {{ method }}_PARAMETERS,
+  {{ method }}{% if loop.last == false %},{% endif %}{% if loop.last == true %}
+
+{% endif %}
 {% endfor %}
 }

@@ -115,7 +115,7 @@ class Engine {
       console.error('Missing paths in documentation')
       return []
     }
-    return this._paths.map(path => path.importStatement)
+    return this._paths.reduce((map, path) => map.concat(path.fullImportStatement), [])
   }
 
   get methods () {
