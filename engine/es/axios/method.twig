@@ -17,6 +17,16 @@ export default function (parameters = {}) {
   let form = {}
 {{ '' }}
 {{ '' }}
+{% set headerDetected = false %}
+{%- for param in parameters|default([]) %}
+  {%- if param.in == 'header' and headerDetected == false  %}
+    {% set headerDetected = true %}
+      if (!config.headers) {
+        config.headers = {}
+      }
+  {% endif %}
+{% endfor %}
+
 {% for param in parameters|default([]) %}
   {%- if param.isRequired == true and param.hasDefault == false %}
   if(parameters['{{ param.camelCaseName }}'] === undefined) {

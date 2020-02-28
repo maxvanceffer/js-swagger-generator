@@ -46,6 +46,16 @@ cli.addArgument([ '-t', '--trace' ], {
   action: 'storeTrue'
 });
 
+// cli.addArgument([ '-li' ], {
+//   help: 'Linter to use [eslint, js-beautify]',
+//   defaultValue: false
+// });
+//
+// cli.addArgument([ '-li-rc' ], {
+//   help: 'Linter configuration file',
+//   defaultValue: false
+// });
+
 cli.addArgument([ 'file' ], {
   help:   'Swagger/Open API version 3.0 file to read, utf-8 encoded without BOM',
   nargs:  '?',

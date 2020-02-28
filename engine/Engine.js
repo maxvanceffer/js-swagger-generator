@@ -6,6 +6,7 @@ const path = require('path')
 const semver = require('semver')
 const log = require('./Logger')
 const _ = require('lodash')
+// const Linter = require('./Linter')
 const ApiPath = require('./Path')
 const { renderTemplateToFile } = require('./helpers')
 
@@ -20,8 +21,9 @@ class Engine {
    * @param client         {String}  Which http client backend will be used (axios, fetch, superagent)
    * @param destination    {String}  Destination folder, where will be put generated source code
    * @param parameters     {Boolean} Render parameters definition for each path ({operationId}_PARAMETERS.js)
+   * @param linter         {Object|Boolean}  Linter configuration, leave them false to not perform linting
    */
-  constructor ({ file, language = 'es', client = 'axios', destination = '', parameters = false }) {
+  constructor ({ file, language = 'es', client = 'axios', destination = '', parameters = false, linter = false }) {
     this._file = file
     this._language = language
     this._client = client
@@ -32,6 +34,7 @@ class Engine {
     this._paths = null
     this._withParameters = parameters
     this._supported = '^3.*.*'
+    this._linter = linter ? new Linter(linter) : linter
   }
 
   get file () {
