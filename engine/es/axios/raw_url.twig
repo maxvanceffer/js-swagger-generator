@@ -1,3 +1,4 @@
+import { getDomain } from './request'
 export const {{ operationId  }}_RAW_URL = () => '{{ path }}'
 
 export const {{ operationId }}_URL = (parameters = {}) => {
@@ -21,5 +22,5 @@ path = path.replace({{ '\'{' ~ parameter.name ~ '}\'' }}, `${parameters['{{ para
 {% endfor %}
   query = '?' + (Object.keys(queryParameters).map(key => key + '=' + encodeURIComponent(queryParameters[key])).join('&'))
 {% endif %}
-  return path + query
+  return getDomain() + path + query
 }
