@@ -1,0 +1,25 @@
+export const {{ operationId  }}_RAW_URL = () => '{{ path }}'
+
+export const {{ operationId }}_URL = (parameters = {}) => {
+  let path = {{ operationId  }}_RAW_URL()
+  let query
+{% if hasQueryParameters == true %}
+  let queryParameters = {}
+{% endif %}
+  {{ '' }}
+{% if hasPathParameters == true %}
+  {% for parameter in pathParameters %}
+path = path.replace({{ '\'{' ~ parameter.name ~ '}\'' }}, `${parameters['{{ parameter.name  }}']}`)
+  {% endfor %}
+{% endif %}
+{% if hasQueryParameters == true %}
+{{ '' }}
+{% for parameter in queryParameters %}
+  if (parameters['{{ parameter.name }}'] !== undefined) {
+    queryParameters['{{ parameter.name }}'] = parameters['{{ parameter.name }}']
+  }
+{% endfor %}
+  query = '?' + (Object.keys(queryParameters).map(key => key + '=' + encodeURIComponent(queryParameters[key])).join('&'))
+{% endif %}
+  return path + query
+}

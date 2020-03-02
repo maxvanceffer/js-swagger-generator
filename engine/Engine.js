@@ -21,9 +21,10 @@ class Engine {
    * @param client         {String}  Which http client backend will be used (axios, fetch, superagent)
    * @param destination    {String}  Destination folder, where will be put generated source code
    * @param parameters     {Boolean} Render parameters definition for each path ({operationId}_PARAMETERS.js)
+   * @param urls           {Boolean} Render url definition for each path ({operationId}_RAW_URL.js)
    * @param linter         {Object|Boolean}  Linter configuration, leave them false to not perform linting
    */
-  constructor ({ file, language = 'es', client = 'axios', destination = '', parameters = false, linter = false }) {
+  constructor ({ file, language = 'es', client = 'axios', destination = '', parameters = false, urls = false, linter = false }) {
     this._file = file
     this._language = language
     this._client = client
@@ -33,6 +34,7 @@ class Engine {
     this._servers = null
     this._paths = null
     this._withParameters = parameters
+    this._withUrls = urls
     this._supported = '^3.*.*'
     this._linter = linter ? new Linter(linter) : linter
   }
@@ -74,7 +76,15 @@ class Engine {
   }
 
   set withParameters (value) {
-    this._withParameters = value
+    this._withParameters = Boolean(value)
+  }
+
+  get withUrls () {
+    return this._withUrls
+  }
+
+  set withUrls (value) {
+    this._withUrls = Boolean(value)
   }
 
   get defaultServerAddress () {

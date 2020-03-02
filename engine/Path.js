@@ -39,6 +39,22 @@ class Path extends BasePath {
     return this.getProperty('parameters', []).map(options => new Parameter(options, this.options.json))
   }
 
+  get hasPathParameters () {
+    return Boolean(this.getProperty('parameters', []).find(option => option.in === 'path'))
+  }
+
+  get hasQueryParameters () {
+    return Boolean(this.getProperty('parameters', []).find(option => option.in === 'query'))
+  }
+
+  get pathParameters () {
+    return this.getProperty('parameters', []).filter(option => option.in === 'path')
+  }
+
+  get queryParameters () {
+    return this.getProperty('parameters', []).filter(option => option.in === 'query')
+  }
+
   get methodName () {
     return _.camelCase(this.getProperty('operationId', ''))
   }
@@ -50,12 +66,17 @@ class Path extends BasePath {
   get fullImportStatement () {
     return [
       this.importStatement,
+      this.importRawUrlStatement,
       this.importParametersStatement
     ]
   }
 
   get importStatement () {
     return `import ${this.operationId} from './${this.operationId}.js'`
+  }
+
+  get importRawUrlStatement () {
+    return `import { ${this.operationId}_URL, ${this.operationId}_RAW_URL } from './${this.operationId}_RAW_URL.js'`
   }
 
   get importParametersStatement () {
@@ -108,6 +129,9 @@ class Path extends BasePath {
     if (engine.withParameters) {
       this.renderParameters(engine)
     }
+    if (engine.withUrls) {
+      this.renderUrl(engine)
+    }
     return file
   }
 
@@ -120,6 +144,12 @@ class Path extends BasePath {
   renderMethod (engine) {
     const template = path.join(__dirname,engine.language, engine.client, 'method.twig')
     const file = path.join(engine.destination, `${this.operationId}.js`)
+    return renderTemplateToFile(template, file, this)
+  }
+
+  renderUrl (engine) {
+    const template = path.join(__dirname, engine.language, engine.client, 'raw_url.twig')
+    const file = path.join(engine.destination, `${this.operationId}_RAW_URL.js`)
     return renderTemplateToFile(template, file, this)
   }
 }

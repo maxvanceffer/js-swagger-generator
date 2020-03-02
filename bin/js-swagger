@@ -41,6 +41,12 @@ cli.addArgument([ '-p', '--parameters' ], {
   action: 'storeTrue'
 });
 
+cli.addArgument([ '-u', '--urls' ], {
+  help:   'Render url definition for each method, to use it separately',
+  defaultValue: true,
+  action: 'storeTrue'
+});
+
 cli.addArgument([ '-t', '--trace' ], {
   help:   'Show stack trace on error',
   action: 'storeTrue'

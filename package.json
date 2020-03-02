@@ -1,11 +1,11 @@
 {
   "name": "js-swagger-generator",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Swagger api generator for js",
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "generate": "node bin/js-swagger ${PWD}/sources/swagger.v3.yml ${PWD}/tests"
+    "generate": "node bin/js-swagger -u -p ${PWD}/sources/swagger.v3.yml ${PWD}/tests"
   },
   "repository": {
     "type": "git",

@@ -87,8 +87,8 @@ class Parameter {
       } else if (isParameterTypeNumber(itemType)) {
         return `[${itemDefault}]`
       }
-    } else if (isParameterTypeNumber(type)) {
-      return _.get(this.options, 'schema.default', 0)
+    } else if (isParameterTypeNumber(type) && _.get(this.options, 'schema.default', false)) {
+      return _.get(this.options, 'schema.default')
     }
 
     return undefined

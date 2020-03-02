@@ -31,7 +31,7 @@ tags:
     description: Find out more about our store
     url: http://swagger.io
 paths:
-  /pet:
+  /pet/{pathTest}:
     put:
       tags:
       - pet
@@ -39,7 +39,15 @@ paths:
       operationId: updatePet
       parameters:
         - $ref: '#/components/parameters/test'
-        - name: testOther
+        - name: pathTest
+          in: path
+          schema:
+            type: string
+        - name: testA
+          in: query
+          schema:
+            type: string
+        - name: testB
           in: query
           schema:
             type: string
