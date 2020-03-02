@@ -3,7 +3,7 @@ export const {{ operationId  }}_RAW_URL = () => '{{ path }}'
 
 export const {{ operationId }}_URL = (parameters = {}) => {
   let path = {{ operationId  }}_RAW_URL()
-  let query
+  let query = ''
 {% if hasQueryParameters == true %}
   let queryParameters = {}
 {% endif %}
