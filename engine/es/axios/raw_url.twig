@@ -20,7 +20,8 @@ path = path.replace({{ '\'{' ~ parameter.name ~ '}\'' }}, `${parameters['{{ para
     queryParameters['{{ parameter.name }}'] = parameters['{{ parameter.name }}']
   }
 {% endfor %}
-  query = '?' + (Object.keys(queryParameters).map(key => key + '=' + encodeURIComponent(queryParameters[key])).join('&'))
+  const keys = Object.keys(queryParameters)
+  query = (keys.length ? '?' : '') + (keys.map(key => key + '=' + encodeURIComponent(queryParameters[key])).join('&'))
 {% endif %}
   return getDomain() + path + query
 }
