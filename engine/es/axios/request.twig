@@ -66,6 +66,17 @@ export const applyQueryParameters = (query, parameters) => {
   }
 }
 
+export const stringifyHeaders = config => {
+  if (config.headers && typeof config.headers === 'object') {
+    config.headers = Object
+      .entries(config.headers)
+      .reduce((headers, entry) => {
+        headers[entry[0]] = String(entry[1]);
+        return headers
+      }, {})
+  }
+}
+
 /**
  *  Make final request, with provided arguments, this function mostly for internal use.
  */
