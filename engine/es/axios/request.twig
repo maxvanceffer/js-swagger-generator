@@ -88,6 +88,9 @@ export const request = (method, url, body, queryParameters, form, config) => {
     queryUrl = url + '?' + qs.stringify(queryParameters)
   }
 
+  // latest axios don't understand headers values which is not strings
+  stringifyHeaders(config)
+
   let request
   if (body) {
     request = axiosInstance[method](queryUrl,body,config)
