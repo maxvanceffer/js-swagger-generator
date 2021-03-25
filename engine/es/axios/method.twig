@@ -59,14 +59,25 @@ if(parameters['{{param.camelCaseName}}'] !== undefined) {
 {% endfor %}
 
 {% if hasRequestBody %}
+
   body = parameters.body || parameters.requestBody
+
   if (body === undefined) {
     return Promise.reject(new Error('Missing required parameter: body or requestBody'))
   }
+  {% if noUselessPayloads == true %}
+
+  if (typeof body === 'object') {
+{% for param in parameters|default([]) %}
+{% if param.in == 'path' %}
+   delete body['{{- param.name }}']
+{% endif %}
+{% endfor %}
+  }
+  {% endif %}
+
 {% if bodyPayloadType != false %}
-  (config.headers !== undefined) ?
-    (config.headers['Content-Type'] = '{{ bodyPayloadType }}') :
-    config['headers'] = {'Content-Type': '{{ bodyPayloadType }}' }
+  (config.headers !== undefined) ? (config.headers['Content-Type'] = '{{ bodyPayloadType }}') : (config['headers'] = {'Content-Type': '{{ bodyPayloadType }}' })
 {% endif %}
 {% endif %}
 

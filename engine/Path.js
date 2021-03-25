@@ -87,6 +87,10 @@ class Path extends BasePath {
     return (this.getProperty('requestBody', false) !== false)
   }
 
+  get noUselessPayloads () {
+    return this.options.uselessPayload
+  }
+
   get bodyPayloadType () {
     if (this.hasRequestBody === true) {
       const requestBody = this.getProperty('requestBody')
@@ -144,6 +148,7 @@ class Path extends BasePath {
   renderMethod (engine) {
     const template = path.join(__dirname,engine.language, engine.client, 'method.twig')
     const file = path.join(engine.destination, `${this.operationId}.js`)
+    this.options.uselessPayload = engine.uselessPayload
     return renderTemplateToFile(template, file, this)
   }
 

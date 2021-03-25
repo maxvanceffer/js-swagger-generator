@@ -24,17 +24,16 @@ class Engine {
    * @param urls           {Boolean} Render url definition for each path ({operationId}_RAW_URL.js)
    * @param linter         {Object|Boolean}  Linter configuration, leave them false to not perform linting
    */
-  constructor ({ file, language = 'es', client = 'axios', destination = '', parameters = false, urls = false, linter = false }) {
+  constructor ({ file, language = 'es', client = 'axios', destination = '', parameters = false, urls = false, linter = false, uselessPayload = false }) {
     this._file = file
     this._language = language
     this._client = client
     this._destination = destination
-    this._json = null
-    this._info = null
     this._servers = null
     this._paths = null
     this._withParameters = parameters
     this._withUrls = urls
+    this._uselessPayload = uselessPayload
     this._supported = '^3.*.*'
     this._linter = linter ? new Linter(linter) : linter
   }
@@ -49,6 +48,10 @@ class Engine {
 
   get language () {
     return this._language
+  }
+
+  get uselessPayload () {
+    return this._uselessPayload
   }
 
   set language (value) {
@@ -153,7 +156,7 @@ class Engine {
   loadAndConvert () {
     return new Promise((resolve, reject) => {
       try {
-        const json = yaml.safeLoad(fs.readFileSync(this._file, 'utf8'))
+        const json = yaml.load(fs.readFileSync(this._file, 'utf8'))
         const { openapi = '0.0.0'} = json
         if (semver.satisfies(openapi, this._supported)) {
           log.info('JSON', json)

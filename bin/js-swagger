@@ -3,11 +3,8 @@
 
 /*eslint-disable no-console*/
 
-// stdlib
-const colors = require('colors')
-
 // 3rd-party
-const argparse = require('argparse')
+const { Command, Option } = require('commander')
 const Engine = require('../engine/Engine.js')
 const Logger = require('../engine/Logger')
 
@@ -15,89 +12,70 @@ const Logger = require('../engine/Logger')
 const outputPad = 2
 
 /////
-const cli = new argparse.ArgumentParser({
-  prog: 'js-swagger',
-  version: require('../package.json').version,
-  addHelp: true
-})
+const program = new Command()
 
-cli.addArgument([ '-c', '--client' ], {
-  help:   'Http client backend which will be used in generated code, (axios, fetch, superagent)',
-  action: 'storeTrue',
-  choices: ['axios', 'fetch', 'superagent'],
-  defaultValue: 'axios'
-});
+program.version('0.2.3')
+program.allowUnknownOption()
+program.arguments('<source> <destination>')
 
-cli.addArgument([ '-l', '--language' ], {
-  help:   'For each language will be generated code (ts - typescript, es - javascript es5 and above, js - for poor js)',
-  defaultValue: 'es',
-  choices: ['es', 'ts', 'js'],
-  action: 'storeTrue'
-});
+program.option('-v, --version', 'Output version and exit')
 
-cli.addArgument([ '-p', '--parameters' ], {
-  help:   'Render parameters definition for each method, to use it separately',
-  defaultValue: true,
-  action: 'storeTrue'
-});
+program
+  .addOption(
+    new Option('-c, --client <client>', 'Http client backend which will be used in generated code, (axios, fetch, superagent)')
+      .choices(['axios', 'fetch', 'superagent'])
+      .default('axios')
+  )
 
-cli.addArgument([ '-u', '--urls' ], {
-  help:   'Render url definition for each method, to use it separately',
-  defaultValue: true,
-  action: 'storeTrue'
-});
+program
+  .addOption(
+    new Option('-l, --language <language>', 'For each language will be generated code (ts - typescript, es - javascript es5 and above, js - for poor js)')
+      .choices(['es', 'ts', 'js'])
+      .default('es')
+  )
 
-cli.addArgument([ '-t', '--trace' ], {
-  help:   'Show stack trace on error',
-  action: 'storeTrue'
-});
-
-// cli.addArgument([ '-li' ], {
-//   help: 'Linter to use [eslint, js-beautify]',
-//   defaultValue: false
-// });
-//
-// cli.addArgument([ '-li-rc' ], {
-//   help: 'Linter configuration file',
-//   defaultValue: false
-// });
-
-cli.addArgument([ 'file' ], {
-  help:   'Swagger/Open API version 3.0 file to read, utf-8 encoded without BOM',
-  nargs:  '?',
-  defaultValue: '-'
-});
-
-cli.addArgument([ 'destination' ], {
-  help:   'Destination folder, where generated code will be saved',
-  nargs: '?',
-  defaultValue: '-'
-});
+program.option('-p, --parameters', 'Render parameters definition for each method, to use it separately', true)
+program.option('-u, --urls', 'Render url definition for each method, to use it separately', true)
+program.option('-t, --trace', 'Show stack trace on error', false)
+program.option('-f, --file', 'Swagger/Open API version 3.0 file to read, utf-8 encoded without BOM', '-')
+program.option('-d, --destination', 'Destination folder, where generated code will be saved', '-')
+program.option('-n, --no-useless-payload', 'Remove properties from payload, which used in queries', false)
 
 ////////////////////////////////////////////////////////////////////////////////
-
-var options = cli.parseArgs();
+let options
+try {
+  program.parse()
+  options = program.opts()
+} catch (e) {
+  console.error(e)
+}
 
 ////////////////////////////////////////////////////////////////////////////////
+const [source = '-', destination = '-'] = program.args
+
+options.file = source || options.file
+options.destination = destination || options.destination
+options.uselessPayload = Boolean(process.argv.find(a => /^-n$/.test(a)))
 
 if (options.file === '-') {
-  console.error('Error: '.red)
+  console.error('Error: ')
   console.error(''.padStart(outputPad), 'Swagger/Open API file path is required')
   return process.exit(1)
 }
 
 if (options.destination === '-') {
-  console.error('Error: '.red)
+  console.error('Error: ')
   console.error(''.padStart(outputPad), 'Destination folder is required')
   return process.exit(1)
 }
 
-console.info('Parameters: '.blue)
+console.info('Parameters: ')
 const table = [
-  [''.padStart(outputPad, ' '), 'Swagger file: '.yellow, options.file],
-  [''.padStart(outputPad, ' '), 'Destination:  '.yellow, options.destination],
-  [''.padStart(outputPad, ' '), 'Language:     '.yellow, options.language],
-  [''.padStart(outputPad, ' '), 'HTTP client:  '.yellow, options.client]
+  [''.padStart(outputPad, ' '), 'Swagger file: ', options.file],
+  [''.padStart(outputPad, ' '), 'Destination:  ', options.destination],
+  [''.padStart(outputPad, ' '), 'Language:     ', options.language],
+  [''.padStart(outputPad, ' '), 'HTTP client:  ', options.client],
+  [''.padStart(outputPad, ' '), 'Useless payload:  ', options.uselessPayload]
 ]
 
 table.forEach(row => console.info(...row))
@@ -114,12 +92,12 @@ const render = async () => {
         return process.exit(0)
       })
       .catch(e => {
-        console.error('Error:'.red)
+        console.error('Error:')
         console.error(''.padStart(outputPad), e)
         return process.exit(1)
       })
   } catch (e) {
-    console.error('Error:'.red)
+    console.error('Error:')
     console.error(''.padStart(outputPad), e)
     return process.exit(1)
   }
