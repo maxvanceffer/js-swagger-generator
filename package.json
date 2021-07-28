@@ -37,7 +37,7 @@
     "lodash": "^4.17.21",
     "semver": "^7.3.5",
     "twig": "^1.15.4",
-    "snyk": "^1.509.0"
+    "snyk": "^1.667.0"
   },
   "bin": {
     "js-swagger": "bin/js-swagger"
